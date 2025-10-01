@@ -1,0 +1,21 @@
+{
+  "sourceRoot": "apps/random-riddle-be/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/random-riddle-be",
+        "main": "apps/random-riddle-be/src/main.ts",
+        "tsConfig": "apps/random-riddle-be/tsconfig.app.json"
+      }
+    },
+    "serve": {
+      "executor": "@nx/node:node",
+      "options": {
+        "buildTarget": "random-riddle-be:build"
+      }
+    }
+  }
+}
