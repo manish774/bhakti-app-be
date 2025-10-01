@@ -5,7 +5,9 @@ import UserModel from "../models/users";
 import UserAuthModel from "../models/userAuth";
 import { hash } from "bcrypt";
 import { getCurrentUserId } from "../auth/auth";
-
+import { generateCode } from "../utils/common";
+import { generateOtpEmailHtml } from "../email/templates";
+import { EmailService } from "../email/email";
 const router = Router();
 
 router.post("/signup", async (req: Request, res: Response): Promise<any> => {
@@ -18,15 +20,28 @@ router.post("/signup", async (req: Request, res: Response): Promise<any> => {
     const userInput = req.body;
     const user = new UserModel(userInput);
     const userResp = await user.save();
+    const otp = generateCode(6);
     const userAuth = new UserAuthModel({
       emailOrPhone: userResp.email,
       password: hashedPassword,
       id: user._id,
+      isVerified: false,
+      verificationCode: otp,
     });
     await userAuth
       .save()
       .then((data) => {
         res.json(req.body);
+      })
+      .then((res) => {
+        const otpTemplate = generateOtpEmailHtml(otp);
+        const email = EmailService.getInstance();
+        email.sendMail({
+          to: userResp.email,
+          subject: "OTP for verification",
+          text: "no",
+          html: otpTemplate,
+        });
       })
       .catch(async (error: any) => {
         console.log(error, "..");
@@ -76,5 +91,50 @@ router.get("/logout", async (req: Request, res: Response) => {
     .cookie("token", null, { expires: new Date(Date.now()) })
     .json("Logged out");
 });
+
+router.post(
+  "/verify-otp",
+  async (req: Request, res: Response): Promise<any> => {
+    console.log("calling");
+    try {
+      const userAuth = await UserAuthModel.findOne({
+        emailOrPhone: req.body.email,
+      });
+
+      if (!userAuth) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+
+      if (userAuth.isVerified) {
+        return res
+          .status(400)
+          .json({ success: false, message: "User already verified" });
+      }
+
+      if (userAuth.verificationCode?.toString() !== req.body.otp) {
+        alert("kjk");
+        return res.status(400).json({ success: false, message: "Invalid OTP" });
+      }
+
+      // ✅ OTP matched → update
+      await UserAuthModel.updateOne(
+        { emailOrPhone: userAuth.emailOrPhone },
+        { $set: { isVerified: true } }
+      );
+
+      return res.json({
+        success: true,
+        message: "Email verified successfully",
+      });
+    } catch (e: any) {
+      console.error(e);
+      return res
+        .status(500)
+        .json({ success: false, message: e?.message || "Server error" });
+    }
+  }
+);
 
 export default router;

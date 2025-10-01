@@ -9,12 +9,16 @@ export interface IUserAuth {
   id: string;
   getJWT: () => string;
   isPasswordSame: (password: string) => boolean;
+  isVerified?: boolean;
+  verificationCode?: string;
 }
 
 const userAuthSchema = new Schema({
   emailOrPhone: { type: String, required: true, unique: true, index: true },
   password: { type: String, required: true },
   id: { type: String, required: true, unique: true },
+  isVerified: { type: Boolean, required: false, unique: false },
+  verificationCode: { type: String, required: true, unique: false },
 });
 
 userAuthSchema.methods.getJWT = async function () {
