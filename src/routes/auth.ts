@@ -4,7 +4,6 @@ import { componentValidate } from "../utils/validate";
 import UserModel from "../models/users";
 import UserAuthModel from "../models/userAuth";
 import { hash } from "bcrypt";
-import { getCurrentUserId } from "../auth/auth";
 import { generateCode } from "../utils/common";
 import { generateOtpEmailHtml } from "../email/templates";
 import { EmailService } from "../email/email";
@@ -65,9 +64,12 @@ router.post("/signup", async (req: Request, res: Response): Promise<any> => {
   }
 });
 
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response): Promise<any> => {
   try {
     const user = await UserAuthModel.findOne({ emailOrPhone: req.body.email });
+    if (user?.isVerified === false) {
+      return res.status(400).json("VERIFY_EMAIL");
+    }
     if (user) {
       const validatePassword = await user.isPasswordSame(req.body.password);
       if (validatePassword) {
@@ -92,6 +94,51 @@ router.get("/logout", async (req: Request, res: Response) => {
     .json("Logged out");
 });
 
+router.post("/resendOtp", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const userAuth = await UserAuthModel.findOne({
+      emailOrPhone: req.body.email,
+    });
+
+    if (!userAuth) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if (userAuth.isVerified) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User already verified" });
+    }
+
+    const otp = generateCode(6);
+    await UserAuthModel.updateOne(
+      { emailOrPhone: userAuth.emailOrPhone },
+      { $set: { verificationCode: otp } }
+    );
+
+    const otpTemplate = generateOtpEmailHtml(otp);
+    const email = EmailService.getInstance();
+    email.sendMail({
+      to: userAuth.emailOrPhone,
+      subject: "OTP for verification",
+      text: "no",
+      html: otpTemplate,
+    });
+
+    return res.json({
+      success: true,
+      message: "OTP sent successfully",
+    });
+  } catch (e: any) {
+    console.error(e);
+    return res
+      .status(500)
+      .json({ success: false, message: e?.message || "Server error" });
+  }
+});
+
 router.post(
   "/verify-otp",
   async (req: Request, res: Response): Promise<any> => {
@@ -114,7 +161,7 @@ router.post(
       }
 
       if (userAuth.verificationCode?.toString() !== req.body.otp) {
-        alert("kjk");
+        console.log("first");
         return res.status(400).json({ success: false, message: "Invalid OTP" });
       }
 

@@ -2,14 +2,14 @@ import { error } from "console";
 
 export const userAllowedProps = {
   profile: {
-    allowed: ["name", "phone"],
+    allowed: ["name"],
     error: "Invalid profile update",
     isValid({ data }: { data: string[] }) {
       return data.every((prop) => this.allowed.includes(prop));
     },
   },
   create: {
-    allowed: ["name", "phone", "email", "password"],
+    allowed: ["name", "email", "password"],
     error: "Invalid data for signup",
     isValid({ data }: { data: string[] }) {
       return data.every((prop) => this.allowed.includes(prop));

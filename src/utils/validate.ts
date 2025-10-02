@@ -19,7 +19,7 @@ export const componentValidate = ({
 }) => {
   switch (validateFor) {
     case "signup": {
-      const { name, email, phone, password } = values;
+      const { name, email, password } = values;
       if (name.length < 3) {
         throw new Error(
           JSON.stringify({
@@ -38,16 +38,7 @@ export const componentValidate = ({
           JSON.stringify({ field: "email", message: "Email is invalid" })
         );
       }
-      if (!phone) {
-        throw new Error(
-          JSON.stringify({ field: "phone", message: "Phone is required" })
-        );
-      }
-      if (phone.toString().length !== 10) {
-        throw new Error(
-          JSON.stringify({ field: "phone", message: "Phone is invalid" })
-        );
-      }
+
       if (!password) {
         throw new Error(
           JSON.stringify({ field: "password", message: "Password is required" })
