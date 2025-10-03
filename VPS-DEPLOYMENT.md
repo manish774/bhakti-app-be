@@ -5,6 +5,7 @@
 ### 1. Prepare Your VPS
 
 Connect to your VPS via SSH:
+
 ```bash
 ssh your-username@your-vps-ip
 ```
@@ -25,12 +26,14 @@ chmod +x simple-deploy.sh
 ### 3. Configure Your Environment
 
 Edit the `.env` file:
+
 ```bash
 cd /var/www/random-riddle-api
 nano .env
 ```
 
 Update these values:
+
 ```env
 NODE_ENV=production
 PORT=8080
@@ -115,6 +118,7 @@ pm2 startup
 ## Configuration Files
 
 ### Environment Variables (.env)
+
 ```env
 NODE_ENV=production
 PORT=8080
@@ -124,6 +128,7 @@ CORS_ORIGIN=*
 ```
 
 ### PM2 Configuration (ecosystem.simple.js)
+
 Already included in your project - uses ts-node to run TypeScript directly.
 
 ## Management Commands
@@ -159,16 +164,19 @@ pm2 restart random-riddle-api
 If you want to use a domain and SSL:
 
 ### 1. Install Nginx
+
 ```bash
 sudo apt install nginx
 ```
 
 ### 2. Create Nginx Config
+
 ```bash
 sudo nano /etc/nginx/sites-available/random-riddle-api
 ```
 
 Add this configuration:
+
 ```nginx
 server {
     listen 80;
@@ -189,6 +197,7 @@ server {
 ```
 
 ### 3. Enable the Site
+
 ```bash
 sudo ln -s /etc/nginx/sites-available/random-riddle-api /etc/nginx/sites-enabled/
 sudo nginx -t
@@ -198,23 +207,27 @@ sudo systemctl reload nginx
 ## Troubleshooting
 
 ### Check if app is running:
+
 ```bash
 pm2 status
 pm2 logs random-riddle-api
 ```
 
 ### Check if port is available:
+
 ```bash
 sudo netstat -tlnp | grep :8080
 ```
 
 ### Test API endpoints:
+
 ```bash
 curl http://localhost:8080/health
 curl http://localhost:8080/api/auth/login
 ```
 
 ### Check MongoDB:
+
 ```bash
 sudo systemctl status mongodb
 mongo  # Connect to MongoDB shell

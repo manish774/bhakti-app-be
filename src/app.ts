@@ -24,11 +24,11 @@ app.use(cookieParser());
 
 // Health check endpoint
 app.get("/health", (req, res) => {
-  res.status(200).json({ 
-    status: "OK", 
+  res.status(200).json({
+    status: "OK",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || "development",
   });
 });
 
@@ -44,7 +44,11 @@ const connectDB = async () => {
     await DB.connect();
     console.log("Connected to database");
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+      console.log(
+        `Server running on port ${PORT} in ${
+          process.env.NODE_ENV || "development"
+        } mode`
+      );
     });
   } catch (error) {
     console.log("Error connecting to database", error);

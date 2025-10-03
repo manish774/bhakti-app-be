@@ -5,18 +5,21 @@ Your Random Riddle API is now ready for VPS deployment! Here's everything you ne
 ## ✅ What's Been Set Up
 
 ### 📦 **Package Configuration**
+
 - ✅ Production build scripts
 - ✅ PM2 process manager
 - ✅ Environment variable support
 - ✅ TypeScript compilation
 
 ### 🔧 **Deployment Files Created**
+
 - ✅ `simple-deploy.sh` - Automated deployment script
 - ✅ `ecosystem.simple.js` - PM2 configuration (runs TypeScript directly)
 - ✅ `VPS-DEPLOYMENT.md` - Step-by-step deployment guide
 - ✅ `.env.example` - Environment template
 
 ### 🌐 **Application Features**
+
 - ✅ Health check endpoint (`/health`)
 - ✅ Environment-based configuration
 - ✅ CORS configuration
@@ -25,6 +28,7 @@ Your Random Riddle API is now ready for VPS deployment! Here's everything you ne
 ## 🚀 **Deploy to Your VPS**
 
 ### **Option 1: Automated Deployment**
+
 ```bash
 # On your VPS:
 curl -O https://raw.githubusercontent.com/manish774/bhakti-app-be/main/simple-deploy.sh
@@ -33,14 +37,16 @@ chmod +x simple-deploy.sh
 ```
 
 ### **Option 2: Manual Deployment**
+
 Follow the detailed steps in `VPS-DEPLOYMENT.md`
 
 ## 🔑 **Important Configuration**
 
 After deployment, edit `/var/www/random-riddle-api/.env`:
+
 ```env
 NODE_ENV=production
-PORT=8080  
+PORT=8080
 MONGODB_URI=mongodb://localhost:27017/random-riddle-db
 JWT_SECRET=your-super-secret-jwt-key-here
 CORS_ORIGIN=*  # or your domain
@@ -49,11 +55,13 @@ CORS_ORIGIN=*  # or your domain
 ## 📋 **Post-Deployment Steps**
 
 1. **Test your API:**
+
    ```bash
    curl http://your-vps-ip:8080/health
    ```
 
 2. **Check PM2 status:**
+
    ```bash
    pm2 status
    pm2 logs random-riddle-api
@@ -74,7 +82,7 @@ pm2 status
 # View logs
 pm2 logs random-riddle-api
 
-# Restart application  
+# Restart application
 pm2 restart random-riddle-api
 
 # Update application
