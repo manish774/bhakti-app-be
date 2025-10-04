@@ -11,6 +11,7 @@ import GroupRouter from "./routes/group";
 import QuestionRouter from "./routes/questions";
 import AnswerRouter from "./routes/answers";
 import GameRouter from "./routes/game";
+import AdminRouter from "./routes/admin";
 import cors from "cors";
 
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api/group", GroupRouter);
 app.use("/api/que", QuestionRouter);
 app.use("/api/ans", AnswerRouter);
 app.use("/api/game", GameRouter);
+app.use("/api/admin", AdminRouter);
 
 const connectDB = async () => {
   try {

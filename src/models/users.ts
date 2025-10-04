@@ -3,6 +3,8 @@ import mongoose, { Schema, model } from "mongoose";
 export interface IUser {
   name: string;
   email: string;
+  role?: "user" | "admin";
+  isActive?: boolean;
 }
 
 const usersSchema = new Schema(
@@ -13,6 +15,17 @@ const usersSchema = new Schema(
       required: true,
       unique: true,
       trim: true,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "admin",
+      index: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+      index: true,
     },
   },
   { timestamps: true }
