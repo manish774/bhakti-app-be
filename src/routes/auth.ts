@@ -74,7 +74,12 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
       const validatePassword = await user.isPasswordSame(req.body.password);
       if (validatePassword) {
         const token = await user.getJWT();
-        res.cookie("token", token);
+        // res.cookie("token", token);
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: true, // required for HTTPS
+          sameSite: "none", // allows cross-site cookies
+        });
         const userdetail = await UserModel.findOne({ email: req.body.email });
         res.json(userdetail);
       } else {
