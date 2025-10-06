@@ -18,7 +18,7 @@ export const auth = async (
     if (!token) return res.status(400).json("Invalid token!");
     const userDetail: any = verify(token, authKey);
     const user = await UserModel.findById({ _id: userDetail._id });
-    if (!user) res.status(400).json("Invalid request");
+    if (!user) res.status(400).json("Invalid request.");
     req.user = user;
     next();
   } catch (e) {
