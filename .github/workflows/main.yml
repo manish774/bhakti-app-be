@@ -4,12 +4,12 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - main  # Change to your default branch if different
+      - main # Change to your default branch if different
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -23,4 +23,4 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            pm2 restart abc
+            pm2 restart jalsuvidha-api
