@@ -14,8 +14,7 @@ export const auth = async (
   next: NextFunction
 ): Promise<any> => {
   try {
-    const cookie = req.cookies;
-    const { token } = cookie;
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(400).json("Invalid token!");
     const userDetail: any = verify(token, authKey);
     const user = await UserModel.findById({ _id: userDetail._id });
