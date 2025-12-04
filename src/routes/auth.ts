@@ -81,7 +81,7 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
           sameSite: "none", // allows cross-site cookies
         });
         const userdetail = await UserModel.findOne({ email: req.body.email });
-        res.json({ ...userdetail, token });
+        res.json({ userdetail, token });
       } else {
         res.status(400).json("Password is incorrect");
       }

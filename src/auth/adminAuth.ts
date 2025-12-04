@@ -16,13 +16,13 @@ export const adminAuth = async (
 ): Promise<any> => {
   try {
     const cookie = req.cookies;
-    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    // Resolve token from cookie or Authorization header (support both "Bearer <token>" and raw token in header)
+    const token =
+      cookie?.token ||
+      req.header("Authorization")?.replace("Bearer ", "") ||
+      req.headers.authorization?.split(" ")[1];
 
-    const newToken =
-      token || req.header("Authorization")?.replace("Bearer ", "");
-
-    console.log(req.header("Authorization")?.replace("Bearer ", ""));
-    if (!newToken) {
+    if (!token) {
       return res.status(401).json({
         success: false,
         message: "Access denied. No token provided.",
