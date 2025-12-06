@@ -155,6 +155,32 @@ router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
   }
 });
 
+router.get(
+  "/:id/packages",
+  async (req: Request, res: Response): Promise<any> => {
+    try {
+      const temple = await TempleModel.findById(req.params.id);
+
+      if (!temple) {
+        return res.status(404).json({
+          success: false,
+          message: "Temple not found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: temple.packages,
+      });
+    } catch (error) {
+      console.error("Error fetching packages:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+);
 // POST /api/admin/temples/:id/packages - Add package to temple
 router.post(
   "/:id/packages",
