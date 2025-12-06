@@ -85,6 +85,7 @@ const templeSchema = new Schema(
     prasadDelivery: prasadDeliverySchema,
     pandit: panditSchema,
     extraInfo: { type: Schema.Types.Mixed, default: {} },
+    description: [String],
   },
   { timestamps: true }
 );
