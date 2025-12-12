@@ -165,7 +165,7 @@ router.post(
           .json({ success: false, message: "User already verified" });
       }
 
-      if (userAuth.verificationCode?.toString() !== req.body.otp) {
+      if (userAuth.verificationCode?.toString() !== req.body.otp?.toString()) {
         console.log("first");
         return res.status(400).json({ success: false, message: "Invalid OTP" });
       }
