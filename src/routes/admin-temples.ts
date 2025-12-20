@@ -74,8 +74,6 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       data: savedTemple,
     });
   } catch (error) {
-    console.error("Error creating temple:", error);
-
     if (error.name === "ValidationError") {
       return res.status(400).json({
         success: false,

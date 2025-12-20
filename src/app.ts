@@ -12,13 +12,25 @@ import QuestionRouter from "./routes/questions";
 import AnswerRouter from "./routes/answers";
 import GameRouter from "./routes/game";
 import AdminRouter from "./routes/admin";
+import UploadRouter from "./routes/upload";
 import cors from "cors";
+import path from "path";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
 
-app.use(cors({ credentials: true, origin: CORS_ORIGIN }));
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    exposedHeaders: ["Set-Cookie"],
+  })
+);
+
+app.options("*", cors());
 app.use(express.json());
 app.use(responseInterceptor);
 app.use(cookieParser());
@@ -40,6 +52,8 @@ app.use("/api/que", QuestionRouter);
 app.use("/api/ans", AnswerRouter);
 app.use("/api/game", GameRouter);
 app.use("/api/admin", AdminRouter);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/api/upload", UploadRouter);
 
 const connectDB = async () => {
   try {

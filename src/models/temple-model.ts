@@ -29,7 +29,7 @@ export interface IPandit {
 export interface ITemple extends Document {
   name: string;
   location: string;
-  image: string;
+  image?: string;
   packages: IPackage[];
   prasadDelivery: IPrasadDelivery;
   pandit: IPandit;
@@ -80,7 +80,7 @@ const templeSchema = new Schema(
   {
     name: { type: String, required: true, trim: true, index: true },
     location: { type: String, required: true, trim: true },
-    image: { type: String, required: true },
+    image: { type: String, required: false },
     packages: [packageSchema],
     prasadDelivery: prasadDeliverySchema,
     pandit: panditSchema,
