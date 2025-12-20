@@ -1,6 +1,12 @@
 import { Router, Request, Response } from "express";
 import TempleModel from "../models/temple-model";
 import { componentValidate } from "../utils/validate";
+import {
+  generateFileUrl,
+  generateFileUrls,
+  handleMulterError,
+  upload,
+} from "../utils/uploads";
 
 const router = Router();
 
@@ -308,5 +314,53 @@ router.delete(
     }
   }
 );
+
+router.post("/upload/single", (req: Request, res: Response) => {
+  upload.single("image")(req, res, (err: any) => {
+    if (err) {
+      //@ts-ignore kjks
+      return handleMulterError(err, req, res, () => {});
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
+
+    const url = generateFileUrl(req, req.file.filename);
+    return res.json({
+      success: true,
+      message: "File uploaded successfully",
+      data: { ...req.file, url },
+    });
+  });
+});
+
+// POST /api/admin/temples/upload/multiple - Multiple images upload
+router.post("/upload/multiple", (req: Request, res: Response) => {
+  upload.array("images", 10)(req, res, (err: any) => {
+    if (err) {
+      //@ts-ignore sjg
+      return handleMulterError(err, req, res, () => {});
+    }
+
+    const files = (req.files as Express.Multer.File[]) || [];
+    if (!files.length) {
+      return res.status(400).json({
+        success: false,
+        message: "No files uploaded",
+      });
+    }
+
+    const result = generateFileUrls(req, files);
+    return res.json({
+      success: true,
+      message: "Files uploaded successfully",
+      data: result,
+    });
+  });
+});
 
 export default router;
