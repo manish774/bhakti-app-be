@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import TempleModel from "../models/temple-model";
 import { componentValidate } from "../utils/validate";
 import {
+  deleteFiles,
   generateFileUrl,
   generateFileUrls,
   handleMulterError,
@@ -315,8 +316,10 @@ router.delete(
   }
 );
 
-router.post("/upload/single", (req: Request, res: Response) => {
-  upload.single("image")(req, res, (err: any) => {
+router.post("/upload/single/:templeId", async (req: Request, res: Response) => {
+  const temple = await TempleModel.findById(req.params.templeId);
+  await deleteFiles([temple.image]);
+  upload.single("image")(req, res, async (err: any) => {
     if (err) {
       //@ts-ignore kjks
       return handleMulterError(err, req, res, () => {});
