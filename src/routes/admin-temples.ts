@@ -316,6 +316,29 @@ router.delete(
   }
 );
 
+router.post("/upload/single", async (req: Request, res: Response) => {
+  upload.single("image")(req, res, async (err: any) => {
+    if (err) {
+      //@ts-ignore kjks
+      return handleMulterError(err, req, res, () => {});
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
+
+    const url = generateFileUrl(req, req.file.filename);
+    return res.json({
+      success: true,
+      message: "File uploaded successfully",
+      data: { ...req.file, url },
+    });
+  });
+});
+
 router.post("/upload/single/:templeId", async (req: Request, res: Response) => {
   const temple = await TempleModel.findById(req.params.templeId);
   await deleteFiles([temple.image]);
