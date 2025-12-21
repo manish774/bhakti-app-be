@@ -23,7 +23,7 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173", "https://admin.jalsuvidha.com"],
+    origin: ["http://localhost:5173", "https://admin.jalsuvidha.com", "*"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
     exposedHeaders: ["Set-Cookie"],
