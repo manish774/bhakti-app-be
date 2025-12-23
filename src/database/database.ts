@@ -16,7 +16,7 @@ class Database {
 
   async connect() {
     Database.connection = await mconnect(
-      "mongodb+srv://manish774:1Wlk48jFMficmKFD@cluster0.ld21j.mongodb.net/randomriddle"
+      "mongodb+srv://manish774:1Wlk48jFMficmKFD@cluster0.ld21j.mongodb.net/bhakti"
     );
 
     return Database.connection;

@@ -119,15 +119,15 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
     }
 
     // Verify package exists in temple
-    const packageExists = temple.packages.some(
-      (pkg) => pkg.id === req.body.packageId
-    );
-    if (!packageExists) {
-      return res.status(400).json({
-        success: false,
-        message: "Package not found in temple",
-      });
-    }
+    // const packageExists = temple.packages.some(
+    //   (pkg) => pkg.id === req.body.packageId
+    // );
+    // if (!packageExists) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Package not found in temple",
+    //   });
+    // }
 
     const booking = new BookingModel(req.body);
     const savedBooking = await booking.save();

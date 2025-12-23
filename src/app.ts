@@ -13,6 +13,10 @@ import AnswerRouter from "./routes/answers";
 import GameRouter from "./routes/game";
 import AdminRouter from "./routes/admin";
 import UploadRouter from "./routes/upload";
+import PackageRouter from "./routes/packages";
+import EventRouter from "./routes/event";
+import PanditRouter from "./routes/pandit";
+
 import cors from "cors";
 import path from "path";
 
@@ -54,6 +58,9 @@ app.use("/api/game", GameRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/upload", UploadRouter);
+app.use("/api/package", PackageRouter);
+app.use("/api/pandit", PanditRouter);
+app.use("/api/event", EventRouter);
 
 const connectDB = async () => {
   try {

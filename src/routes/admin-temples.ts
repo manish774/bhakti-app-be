@@ -160,161 +160,162 @@ router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
   }
 });
 
-router.get(
-  "/:id/packages",
-  async (req: Request, res: Response): Promise<any> => {
-    try {
-      const temple = await TempleModel.findById(req.params.id);
+// router.get(
+//   "/:id/packages",
+//   async (req: Request, res: Response): Promise<any> => {
+//     try {
+//       const temple = await packageSchema.findById(req.params.id);
 
-      if (!temple) {
-        return res.status(404).json({
-          success: false,
-          message: "Temple not found",
-        });
-      }
+//       if (!temple) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Temple not found",
+//         });
+//       }
 
-      return res.status(200).json({
-        success: true,
-        data: temple.packages,
-      });
-    } catch (error) {
-      console.error("Error fetching packages:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
-      });
-    }
-  }
-);
+//       return res.status(200).json({
+//         success: true,
+//         data: temple.packages,
+//       });
+//     } catch (error) {
+//       console.error("Error fetching packages:", error);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Internal server error",
+//       });
+//     }
+//   }
+// );
+
 // POST /api/admin/temples/:id/packages - Add package to temple
-router.post(
-  "/:id/packages",
-  async (req: Request, res: Response): Promise<any> => {
-    try {
-      const temple = await TempleModel.findById(req.params.id);
+// router.post(
+//   "/:id/packages",
+//   async (req: Request, res: Response): Promise<any> => {
+//     try {
+//       const temple = await TempleModel.findById(req.params.id);
 
-      if (!temple) {
-        return res.status(404).json({
-          success: false,
-          message: "Temple not found",
-        });
-      }
+//       if (!temple) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Temple not found",
+//         });
+//       }
 
-      // Check if package ID already exists
-      const existingPackage = temple.packages.find(
-        (pkg) => pkg.id === req.body.id
-      );
-      if (existingPackage) {
-        return res.status(400).json({
-          success: false,
-          message: "Package with this ID already exists",
-        });
-      }
+//       // Check if package ID already exists
+//       const existingPackage = temple.packages.find(
+//         (pkg) => pkg.id === req.body.id
+//       );
+//       if (existingPackage) {
+//         return res.status(400).json({
+//           success: false,
+//           message: "Package with this ID already exists",
+//         });
+//       }
 
-      temple.packages.push(req.body);
-      await temple.save();
+//       temple.packages.push(req.body);
+//       await temple.save();
 
-      return res.status(201).json({
-        success: true,
-        message: "Package added successfully",
-        data: temple,
-      });
-    } catch (error) {
-      console.error("Error adding package:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
-      });
-    }
-  }
-);
+//       return res.status(201).json({
+//         success: true,
+//         message: "Package added successfully",
+//         data: temple,
+//       });
+//     } catch (error) {
+//       console.error("Error adding package:", error);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Internal server error",
+//       });
+//     }
+//   }
+// );
 
 // PUT /api/admin/temples/:id/packages/:packageId - Update package
-router.put(
-  "/:id/packages/:packageId",
-  async (req: Request, res: Response): Promise<any> => {
-    try {
-      const temple = await TempleModel.findById(req.params.id);
+// router.put(
+//   "/:id/packages/:packageId",
+//   async (req: Request, res: Response): Promise<any> => {
+//     try {
+//       const temple = await TempleModel.findById(req.params.id);
 
-      if (!temple) {
-        return res.status(404).json({
-          success: false,
-          message: "Temple not found",
-        });
-      }
+//       if (!temple) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Temple not found",
+//         });
+//       }
 
-      const packageIndex = temple.packages.findIndex(
-        (pkg) => pkg.id === req.params.packageId
-      );
-      if (packageIndex === -1) {
-        return res.status(404).json({
-          success: false,
-          message: "Package not found",
-        });
-      }
+//       const packageIndex = temple.packages.findIndex(
+//         (pkg) => pkg.id === req.params.packageId
+//       );
+//       if (packageIndex === -1) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Package not found",
+//         });
+//       }
 
-      temple.packages[packageIndex] = {
-        ...temple.packages[packageIndex],
-        ...req.body,
-      };
-      await temple.save();
+//       temple.packages[packageIndex] = {
+//         ...temple.packages[packageIndex],
+//         ...req.body,
+//       };
+//       await temple.save();
 
-      return res.status(200).json({
-        success: true,
-        message: "Package updated successfully",
-        data: temple,
-      });
-    } catch (error) {
-      console.error("Error updating package:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
-      });
-    }
-  }
-);
+//       return res.status(200).json({
+//         success: true,
+//         message: "Package updated successfully",
+//         data: temple,
+//       });
+//     } catch (error) {
+//       console.error("Error updating package:", error);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Internal server error",
+//       });
+//     }
+//   }
+// );
 
 // DELETE /api/admin/temples/:id/packages/:packageId - Delete package
-router.delete(
-  "/:id/packages/:packageId",
-  async (req: Request, res: Response): Promise<any> => {
-    try {
-      const temple = await TempleModel.findById(req.params.id);
+// router.delete(
+//   "/:id/packages/:packageId",
+//   async (req: Request, res: Response): Promise<any> => {
+//     try {
+//       const temple = await TempleModel.findById(req.params.id);
 
-      if (!temple) {
-        return res.status(404).json({
-          success: false,
-          message: "Temple not found",
-        });
-      }
+//       if (!temple) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Temple not found",
+//         });
+//       }
 
-      const packageIndex = temple.packages.findIndex(
-        (pkg) => pkg.id === req.params.packageId
-      );
-      if (packageIndex === -1) {
-        return res.status(404).json({
-          success: false,
-          message: "Package not found",
-        });
-      }
+//       const packageIndex = temple.packages.findIndex(
+//         (pkg) => pkg.id === req.params.packageId
+//       );
+//       if (packageIndex === -1) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Package not found",
+//         });
+//       }
 
-      temple.packages.splice(packageIndex, 1);
-      await temple.save();
+//       temple.packages.splice(packageIndex, 1);
+//       await temple.save();
 
-      return res.status(200).json({
-        success: true,
-        message: "Package deleted successfully",
-        data: temple,
-      });
-    } catch (error) {
-      console.error("Error deleting package:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
-      });
-    }
-  }
-);
+//       return res.status(200).json({
+//         success: true,
+//         message: "Package deleted successfully",
+//         data: temple,
+//       });
+//     } catch (error) {
+//       console.error("Error deleting package:", error);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Internal server error",
+//       });
+//     }
+//   }
+// );
 
 router.post("/upload/single", async (req: Request, res: Response) => {
   upload.single("image")(req, res, async (err: any) => {

@@ -60,3 +60,101 @@ export const answersAllowedProps = {
     },
   },
 };
+
+export const packageAllowedProps = {
+  create: {
+    allowed: [
+      "name",
+      "numberOfPerson",
+      "title",
+      "price",
+      "description",
+      "isPopular",
+    ],
+    error: "Invalid data for package creation",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+
+  update: {
+    allowed: [
+      "name",
+      "numberOfPerson",
+      "title",
+      "price",
+      "description",
+      "isPopular",
+    ],
+    error: "Invalid data for package update",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+};
+
+export const eventAllowedProps = {
+  create: {
+    allowed: [
+      "eventName",
+      "templeId",
+      "packageId",
+      "pricePackageId",
+      "isPopular",
+    ],
+    error: "Invalid data for event creation",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+
+  update: {
+    allowed: [
+      "eventName",
+      "templeId",
+      "packageId",
+      "pricePackageId",
+      "isPopular",
+    ],
+    error: "Invalid data for event update",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+};
+
+export const panditAllowedProps = {
+  create: {
+    allowed: [
+      "name",
+      "about",
+      "address",
+      "email",
+      "phone",
+      "extraInfo",
+      "specialization",
+      "templeAssociatedId",
+    ],
+    error: "Invalid data for pandit creation",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+
+  update: {
+    allowed: [
+      "name",
+      "about",
+      "address",
+      "email",
+      "phone",
+      "extraInfo",
+      "specialization",
+      "templeAssociatedId",
+    ],
+    error: "Invalid data for pandit update",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+};
