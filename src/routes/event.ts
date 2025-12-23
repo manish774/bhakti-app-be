@@ -2,6 +2,9 @@ import { Router, Request, Response, NextFunction } from "express";
 import EventModel from "../models/event-model";
 import { auth } from "../auth/auth";
 import { eventAllowedProps } from "../utils/allowedPropsToUpdate";
+import TempleModel from "../models/temple-model";
+import PackageModel from "../models/package-model";
+import { checkEmpty, validateIdsExist } from "./utils";
 
 const router = Router();
 
@@ -20,6 +23,13 @@ router.post(
 
       const { eventName, templeId, packageId, pricePackageId, isPopular } =
         req.body;
+
+      await validateIdsExist(TempleModel, templeId, "temple");
+      await validateIdsExist(PackageModel, packageId, "packages");
+      const getPackageIds = Object.keys(pricePackageId);
+      await validateIdsExist(PackageModel, getPackageIds, "packages");
+
+      await checkEmpty([{ propertyname: "Temple name", value: eventName }]);
 
       const payload = new EventModel({
         eventName,
