@@ -1,10 +1,16 @@
 import mongoose, { Schema } from "mongoose";
 
+export type PackageIddec = {
+  packageId: string;
+  price: number;
+  discount: number;
+};
+
 type Ievent = {
   eventName: string;
   templeId: string[];
   packageId: string[];
-  pricePackageId: Record<string, any>;
+  pricePackageId: PackageIddec[];
   eventExpirationTime: string;
   eventStartTime: string;
 };

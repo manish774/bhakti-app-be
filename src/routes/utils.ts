@@ -3,12 +3,19 @@ import mongoose, { Model } from "mongoose";
 export async function validateIdsExist<T>(
   model: Model<T>,
   ids: string[],
-  entityName: string
+  entityName: string,
+  mandatory: boolean = true
 ): Promise<void> {
   // 1. Validate ObjectId format
+  if (ids === undefined) {
+    throw new Error(`Please provide ${entityName} details`);
+  }
+  if (mandatory && ids?.length === 0) {
+    throw new Error(`Please provide ${entityName} ID format`);
+  }
   const invalidIds = ids.filter((id) => !mongoose.Types.ObjectId.isValid(id));
   if (invalidIds.length > 0) {
-    throw new Error(`Invalid ${entityName} ID format`);
+    throw new Error(`Invalid ${entityName} ID format.`);
   }
 
   // 2. Fetch only _id for efficiency

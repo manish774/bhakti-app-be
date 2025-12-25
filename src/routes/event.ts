@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import EventModel from "../models/event-model";
+import EventModel, { PackageIddec } from "../models/event-model";
 import { auth } from "../auth/auth";
 import { eventAllowedProps } from "../utils/allowedPropsToUpdate";
 import TempleModel from "../models/temple-model";
@@ -26,7 +26,9 @@ router.post(
 
       await validateIdsExist(TempleModel, templeId, "temple");
       await validateIdsExist(PackageModel, packageId, "packages");
-      const getPackageIds = Object.keys(pricePackageId);
+      const getPackageIds = pricePackageId.map(
+        (x: PackageIddec) => x.packageId
+      );
       await validateIdsExist(PackageModel, getPackageIds, "packages");
 
       await checkEmpty([{ propertyname: "Temple name", value: eventName }]);
