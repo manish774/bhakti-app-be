@@ -26,6 +26,7 @@ export interface ITemple extends Document {
   description: string[];
   createdAt: Date;
   updatedAt: Date;
+  images?: string[];
 }
 
 /* -------------------- Sub Schemas -------------------- */
@@ -62,7 +63,6 @@ const contractorInfo = new Schema({
   phone: { type: String, required: true },
   address: { type: locationSchema, required: true },
 });
-/* -------------------- Main Schema -------------------- */
 
 const templeSchema = new Schema(
   {
@@ -105,8 +105,6 @@ const templeSchema = new Schema(
   },
   { timestamps: true }
 );
-
-/* -------------------- Model -------------------- */
 
 const TempleModel = mongoose.model<ITemple>("temples", templeSchema);
 TempleModel.createIndexes();
