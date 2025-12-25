@@ -12,13 +12,14 @@ import QuestionRouter from "./routes/questions";
 import AnswerRouter from "./routes/answers";
 import GameRouter from "./routes/game";
 import AdminRouter from "./routes/admin";
-import UploadRouter from "./routes/upload";
+import UploadRouter from "./routes/upload.router";
 import PackageRouter from "./routes/packages";
 import EventRouter from "./routes/event";
 import PanditRouter from "./routes/pandit";
 
 import cors from "cors";
 import path from "path";
+import { multerErrorHandler } from "./middleware/multerError";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -61,6 +62,9 @@ app.use("/api/upload", UploadRouter);
 app.use("/api/package", PackageRouter);
 app.use("/api/pandit", PanditRouter);
 app.use("/api/event", EventRouter);
+
+// ❗ MUST be last
+app.use(multerErrorHandler);
 
 const connectDB = async () => {
   try {

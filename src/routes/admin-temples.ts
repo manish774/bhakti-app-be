@@ -70,31 +70,42 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
 });
 
 // POST /api/admin/temples - Create new temple
-router.post("/", async (req: Request, res: Response): Promise<any> => {
-  try {
-    const temple = new TempleModel(req.body);
-    const savedTemple = await temple.save();
+router.post(
+  "/",
+  upload.array("image"),
+  async (req: Request, res: Response): Promise<any> => {
+    try {
+      if (!req.file) {
+        res.status(400).json({
+          success: false,
+          message: "Temple image is required",
+        });
+        return;
+      }
+      const temple = new TempleModel(req.body);
+      const savedTemple = await temple.save();
 
-    return res.status(201).json({
-      success: true,
-      message: "Temple created successfully",
-      data: savedTemple,
-    });
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      return res.status(400).json({
+      return res.status(201).json({
+        success: true,
+        message: "Temple created successfully",
+        data: savedTemple,
+      });
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          success: false,
+          message: "Validation error",
+          errors: error.errors,
+        });
+      }
+
+      return res.status(500).json({
         success: false,
-        message: "Validation error",
-        errors: error.errors,
+        message: "Internal server error",
       });
     }
-
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
   }
-});
+);
 
 // PUT /api/admin/temples/:id - Update temple
 router.put("/:id", async (req: Request, res: Response): Promise<any> => {
