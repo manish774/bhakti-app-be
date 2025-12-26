@@ -70,19 +70,33 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
 });
 
 // POST /api/admin/temples - Create new temple
+// POST /api/admin/temples - Create new temple
 router.post(
   "/",
-  upload.array("image"),
+  upload.array("images"),
   async (req: Request, res: Response): Promise<any> => {
     try {
-      if (!req.file) {
-        res.status(400).json({
+      const files = (req.files as Express.Multer.File[]) || [];
+
+      // Validate that at least one image was uploaded
+      if (!files || files.length === 0) {
+        return res.status(400).json({
           success: false,
-          message: "Temple image is required",
+          message: "At least one temple image is required",
         });
-        return;
       }
-      const temple = new TempleModel(req.body);
+
+      // Extract filenames from uploaded files
+      const imageFilenames = files.map((file) => file.filename);
+
+      // Add image filenames to request body
+      const templeData = {
+        ...req.body,
+        images: imageFilenames, // or 'image: imageFilenames[0]' if single image
+      };
+
+      // Create and save temple
+      const temple = new TempleModel(templeData);
       const savedTemple = await temple.save();
 
       return res.status(201).json({
@@ -90,7 +104,14 @@ router.post(
         message: "Temple created successfully",
         data: savedTemple,
       });
-    } catch (error) {
+    } catch (error: any) {
+      // Delete uploaded files if database save fails
+      if (req.files) {
+        const files = req.files as Express.Multer.File[];
+        const filenames = files.map((f) => f.filename);
+        await deleteFiles(filenames);
+      }
+
       if (error.name === "ValidationError") {
         return res.status(400).json({
           success: false,
@@ -99,6 +120,7 @@ router.post(
         });
       }
 
+      console.error("Error creating temple:", error);
       return res.status(500).json({
         success: false,
         message: "Internal server error",
