@@ -70,60 +70,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
 });
 
 // POST /api/admin/temples - Create new temple
-<<<<<<< HEAD
-// POST /api/admin/temples - Create new temple
-router.post(
-  "/",
-  upload.array("images"),
-  async (req: Request, res: Response): Promise<any> => {
-    try {
-      const files = (req.files as Express.Multer.File[]) || [];
-
-      // Validate that at least one image was uploaded
-      if (!files || files.length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: "At least one temple image is required",
-        });
-      }
-
-      // Extract filenames from uploaded files
-      const imageFilenames = files.map((file) => file.filename);
-
-      // Add image filenames to request body
-      const templeData = {
-        ...req.body,
-        images: imageFilenames, // or 'image: imageFilenames[0]' if single image
-      };
-
-      // Create and save temple
-      const temple = new TempleModel(templeData);
-      const savedTemple = await temple.save();
-
-      return res.status(201).json({
-        success: true,
-        message: "Temple created successfully",
-        data: savedTemple,
-      });
-    } catch (error: any) {
-      // Delete uploaded files if database save fails
-      if (req.files) {
-        const files = req.files as Express.Multer.File[];
-        const filenames = files.map((f) => f.filename);
-        await deleteFiles(filenames);
-      }
-
-      if (error.name === "ValidationError") {
-        return res.status(400).json({
-          success: false,
-          message: "Validation error",
-          errors: error.errors,
-        });
-      }
-
-      console.error("Error creating temple:", error);
-      return res.status(500).json({
-=======
 router.post("/", async (req: Request, res: Response): Promise<any> => {
   try {
     const temple = new TempleModel(req.body);
@@ -137,7 +83,6 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).json({
->>>>>>> parent of 22d2edc (image upload simplification)
         success: false,
         message: "Validation error",
         errors: error.errors,
