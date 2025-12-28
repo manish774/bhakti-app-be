@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import PackageModel from "../models/package-model";
 import { auth, getCurrentUserId } from "../auth/auth";
 import { packageAllowedProps } from "../utils/allowedPropsToUpdate";
+import mongoose from "mongoose";
 
 const router = Router();
 
@@ -140,28 +141,31 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
  * GET PACKAGE BY ID
  * GET /get/:id
  */
-router.get(
-  "/get/:id",
+router.post(
+  "/getByIds",
   auth,
   async (req: Request, res: Response): Promise<any> => {
     try {
-      const { id } = req.params;
+      const { ids } = req.body;
 
-      if (!id) {
-        return res.status(400).json("Missing package id");
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json("ids must be a non-empty array");
       }
 
-      const packageData = await PackageModel.findById(id);
+      const validIds = ids.filter((id) => mongoose.Types.ObjectId.isValid(id));
 
-      if (!packageData) {
-        return res.status(404).json("Package not found");
-      }
+      const packages = await PackageModel.find({
+        _id: { $in: validIds },
+      });
 
-      res.json(packageData);
-    } catch (e: any) {
-      res.status(400).json("Invalid package id");
+      return res.status(200).json(packages);
+    } catch (e) {
+      console.error("Error fetching packages by ids:", e);
+      return res.status(500).json("Internal server error");
     }
   }
 );
+
+router.post("get");
 
 export default router;
