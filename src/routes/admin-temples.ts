@@ -8,6 +8,7 @@ import {
   handleMulterError,
   upload,
 } from "../utils/uploads";
+import mongoose from "mongoose";
 
 const router = Router();
 
@@ -135,10 +136,49 @@ router.put("/:id", async (req: Request, res: Response): Promise<any> => {
   }
 });
 
-// DELETE /api/admin/temples/:id - Delete temple
-router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
+router.post("/getByIds", async (req: Request, res: Response): Promise<any> => {
   try {
-    const temple = await TempleModel.findByIdAndDelete(req.params.id);
+    const { ids } = req.body;
+
+    // Validate input
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "ids must be a non-empty array",
+      });
+    }
+
+    // Optional: validate ObjectIds
+    const validIds = ids.filter((id) => mongoose.Types.ObjectId.isValid(id));
+
+    if (validIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No valid temple IDs provided",
+      });
+    }
+
+    const temples = await TempleModel.find({
+      _id: { $in: validIds },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Temples fetched successfully",
+      data: temples,
+    });
+  } catch (error) {
+    console.error("Error fetching temples by ids:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+router.get("/:id", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const temple = await TempleModel.findById(req.params.id);
 
     if (!temple) {
       return res.status(404).json({
@@ -149,10 +189,10 @@ router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
 
     return res.status(200).json({
       success: true,
-      message: "Temple deleted successfully",
+      data: temple,
     });
   } catch (error) {
-    console.error("Error deleting temple:", error);
+    console.error("Error fetching temple:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
