@@ -118,8 +118,27 @@ router.delete(
  */
 router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   try {
-    const events = await EventModel.find();
-    res.json(events);
+    // Read query params
+    const page = Math.max(parseInt(req.query.page as string) || 1, 1);
+    const limit = Math.max(parseInt(req.query.limit as string) || 10, 1);
+
+    const skip = (page - 1) * limit;
+
+    // Fetch data with pagination
+    const [events, total] = await Promise.all([
+      EventModel.find().skip(skip).limit(limit).sort({ createdAt: -1 }),
+      EventModel.countDocuments(),
+    ]);
+
+    res.json({
+      data: events,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (e: any) {
     res.status(400).json(e?.message);
   }
