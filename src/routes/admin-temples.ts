@@ -139,7 +139,6 @@ router.put("/:id", async (req: Request, res: Response): Promise<any> => {
 router.post("/getByIds", async (req: Request, res: Response): Promise<any> => {
   try {
     const { ids } = req.body;
-
     // Validate input
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({

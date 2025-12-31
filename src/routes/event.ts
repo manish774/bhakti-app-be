@@ -120,7 +120,7 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   try {
     // Read query params
     const page = Math.max(parseInt(req.query.page as string) || 1, 1);
-    const limit = Math.max(parseInt(req.query.limit as string) || 10, 1);
+    const limit = Math.max(parseInt(req.query.limit as string) || 10000, 1);
 
     const skip = (page - 1) * limit;
 
