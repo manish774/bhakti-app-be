@@ -11,8 +11,8 @@ export type Ievent = {
   templeId: string[];
   packageId: string[];
   pricePackageId: PackageIddec[];
-  eventExpirationTime: String;
-  eventStartTime: String;
+  eventExpirationTime: string;
+  eventStartTime: string;
   isPopular: boolean;
 };
 
@@ -31,8 +31,8 @@ const packageSchema = new Schema(
     templeId: { type: [String], required: true },
     packageId: { type: [String], default: true },
     pricePackageId: { type: [pricePackageSchema], required: true },
-    eventExpirationTime: { type: String, default: null },
-    eventStartTime: { type: String, default: null },
+    eventExpirationTime: { type: String, default: null, required: true },
+    eventStartTime: { type: String, default: null, required: true },
     isPopular: { type: Boolean, default: false },
   },
   { _id: true }

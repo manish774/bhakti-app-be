@@ -49,7 +49,7 @@ router.post(
         pricePackageId,
         isPopular,
       });
-
+      console.log(payload);
       const response = await payload.save();
       res.json(response);
     } catch (e: any) {
