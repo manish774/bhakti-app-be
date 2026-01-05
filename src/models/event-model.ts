@@ -6,13 +6,14 @@ export type PackageIddec = {
   discount: number;
 };
 
-type Ievent = {
+export type Ievent = {
   eventName: string;
   templeId: string[];
   packageId: string[];
   pricePackageId: PackageIddec[];
   eventExpirationTime: Date;
   eventStartTime: Date;
+  isPopular: boolean;
 };
 
 const pricePackageSchema = new Schema(

@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import EventModel, { PackageIddec } from "../models/event-model";
+import EventModel, { Ievent, PackageIddec } from "../models/event-model";
 import { auth } from "../auth/auth";
 import { eventAllowedProps } from "../utils/allowedPropsToUpdate";
 import TempleModel from "../models/temple-model";
@@ -21,8 +21,15 @@ router.post(
         return res.status(400).json(eventAllowedProps.create.error);
       }
 
-      const { eventName, templeId, packageId, pricePackageId, isPopular } =
-        req.body;
+      const {
+        eventName,
+        templeId,
+        packageId,
+        pricePackageId,
+        isPopular,
+        eventExpirationTime,
+        eventStartTime,
+      }: Ievent = req.body;
 
       await validateIdsExist(TempleModel, templeId, "temple");
       await validateIdsExist(PackageModel, packageId, "packages");
@@ -34,6 +41,8 @@ router.post(
       await checkEmpty([{ propertyname: "Temple name", value: eventName }]);
 
       const payload = new EventModel({
+        eventExpirationTime,
+        eventStartTime,
         eventName,
         templeId,
         packageId,
