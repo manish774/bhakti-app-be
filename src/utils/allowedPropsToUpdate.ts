@@ -162,3 +162,21 @@ export const panditAllowedProps = {
     },
   },
 };
+
+export const coreEventAllowedProps = {
+  create: {
+    allowed: ["name", "description", "status", "iconUrl"],
+    error: "Invalid data for core event creation",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+
+  update: {
+    allowed: ["name", "description", "status", "iconUrl"],
+    error: "Invalid data for core event update",
+    isValid({ data }: { data: Record<string, any> }) {
+      return Object.keys(data).every((prop) => this.allowed.includes(prop));
+    },
+  },
+};

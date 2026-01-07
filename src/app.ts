@@ -16,6 +16,7 @@ import UploadRouter from "./routes/upload";
 import PackageRouter from "./routes/packages";
 import EventRouter from "./routes/event";
 import PanditRouter from "./routes/pandit";
+import CoreEventRouter from "./routes/coreevent";
 
 import cors from "cors";
 import path from "path";
@@ -61,6 +62,7 @@ app.use("/api/upload", UploadRouter);
 app.use("/api/package", PackageRouter);
 app.use("/api/pandit", PanditRouter);
 app.use("/api/event", EventRouter);
+app.use("/api/coreevent", CoreEventRouter);
 
 const connectDB = async () => {
   try {
