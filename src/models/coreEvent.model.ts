@@ -12,6 +12,7 @@ const coreEventSchema = new Schema(
     name: { type: String, required: true, unique: true, index: true },
     description: { type: String, required: false },
     status: {
+      type: String,
       enum: ["active", "inactive"],
       default: "active",
       index: true,
