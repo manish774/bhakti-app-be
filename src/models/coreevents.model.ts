@@ -1,37 +1,36 @@
 import { model, Schema } from "mongoose";
 
-enum CoreEventIds {
+export enum CoreEventIds {
   ONLINE_PUJA = "coreevent_online_puja",
   OFFLINE_PUJA = "coreevent_offline_puja",
 }
 
-//core
-interface CoreEvent {
-  name: string;
+// core event type
+export interface CoreEvent {
+  type: CoreEventIds;
+  title: string;
   description?: string;
-  status: "active" | "inactive";
-  iconUrl?: string;
-  id: CoreEventIds;
+  icon: string;
+  color: string;
+  shadowColor: string;
+  visible: boolean;
 }
 
 const coreEventSchema = new Schema(
   {
-    id: {
+    type: {
       type: String,
       enum: Object.values(CoreEventIds),
       required: true,
       unique: true,
       index: true,
     },
-    name: { type: String, required: true, unique: true, index: true },
+    title: { type: String, required: true, unique: true, index: true },
     description: { type: String, required: false },
-    status: {
-      type: String,
-      enum: ["active", "inactive"],
-      default: "active",
-      index: true,
-    },
-    iconUrl: { type: String, required: false },
+    icon: { type: String, required: true },
+    color: { type: String, required: false },
+    shadowColor: { type: String, required: false },
+    visible: { type: Boolean, default: true, index: true },
   },
   { timestamps: true }
 );

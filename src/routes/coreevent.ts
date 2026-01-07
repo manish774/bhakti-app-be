@@ -1,8 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
-import CoreEventModel from "../models/coreevents.model";
+import CoreEventModel, { CoreEventIds } from "../models/coreevents.model";
 import { auth } from "../auth/auth";
 import { coreEventAllowedProps } from "../utils/allowedPropsToUpdate";
-import mongoose from "mongoose";
 
 const router = Router();
 
@@ -19,14 +18,21 @@ router.post(
         return res.status(400).json(coreEventAllowedProps.create.error);
       }
 
-      const { name, description, status, iconUrl, id } = req.body;
+      const { type, title, description, icon, color, shadowColor, visible } =
+        req.body;
+
+      if (!Object.values(CoreEventIds).includes(type)) {
+        return res.status(400).json("Invalid core event type");
+      }
 
       const payload = new CoreEventModel({
-        id,
-        name,
+        type,
+        title,
         description,
-        status,
-        iconUrl,
+        icon,
+        color,
+        shadowColor,
+        visible,
       });
 
       const response = await payload.save();
@@ -45,10 +51,10 @@ router.patch(
   auth,
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-      const { id, ...updateData } = req.body;
+      const { type, ...updateData } = req.body;
 
-      if (!id) {
-        return res.status(400).json("Missing core event id");
+      if (!type) {
+        return res.status(400).json("Missing core event type");
       }
 
       const isValid = coreEventAllowedProps.update.isValid({
@@ -59,9 +65,9 @@ router.patch(
         return res.status(400).json(coreEventAllowedProps.update.error);
       }
 
-      // Use `id` field (string enum) to locate the document (not MongoDB _id)
+      // Use `type` (enum) to locate the document
       const response = await CoreEventModel.findOneAndUpdate(
-        { id },
+        { type },
         updateData,
         {
           new: true,
@@ -69,7 +75,7 @@ router.patch(
       );
 
       if (!response) {
-        return res.status(400).json("Invalid core event id");
+        return res.status(400).json("Invalid core event type");
       }
 
       res.json(response);
@@ -140,22 +146,25 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
  * GET CORE EVENTS BY IDS
  */
 router.post(
-  "/getByIds",
+  "/getByTypes",
   auth,
   async (req: Request, res: Response): Promise<any> => {
     try {
-      const { ids } = req.body;
+      const { types } = req.body;
 
-      if (!Array.isArray(ids) || ids.length === 0) {
-        return res.status(400).json("ids must be a non-empty array");
+      if (!Array.isArray(types) || types.length === 0) {
+        return res.status(400).json("types must be a non-empty array");
       }
 
-      // Core events use string `id` values (enum), so query by `id` field directly
-      const items = await CoreEventModel.find({ id: { $in: ids } });
+      const validTypes = types.filter((t: string) =>
+        Object.values(CoreEventIds).includes(t as CoreEventIds)
+      );
+
+      const items = await CoreEventModel.find({ type: { $in: validTypes } });
 
       return res.status(200).json(items);
     } catch (e) {
-      console.error("Error fetching core events by ids:", e);
+      console.error("Error fetching core events by types:", e);
       return res.status(500).json("Internal server error");
     }
   }
