@@ -59,9 +59,14 @@ router.patch(
         return res.status(400).json(coreEventAllowedProps.update.error);
       }
 
-      const response = await CoreEventModel.findByIdAndUpdate(id, updateData, {
-        new: true,
-      });
+      // Use `id` field (string enum) to locate the document (not MongoDB _id)
+      const response = await CoreEventModel.findOneAndUpdate(
+        { id },
+        updateData,
+        {
+          new: true,
+        }
+      );
 
       if (!response) {
         return res.status(400).json("Invalid core event id");
@@ -145,11 +150,8 @@ router.post(
         return res.status(400).json("ids must be a non-empty array");
       }
 
-      const validIds = ids.filter((id: string) =>
-        mongoose.Types.ObjectId.isValid(id)
-      );
-
-      const items = await CoreEventModel.find({ _id: { $in: validIds } });
+      // Core events use string `id` values (enum), so query by `id` field directly
+      const items = await CoreEventModel.find({ id: { $in: ids } });
 
       return res.status(200).json(items);
     } catch (e) {
