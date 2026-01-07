@@ -19,9 +19,10 @@ router.post(
         return res.status(400).json(coreEventAllowedProps.create.error);
       }
 
-      const { name, description, status, iconUrl } = req.body;
+      const { name, description, status, iconUrl, id } = req.body;
 
       const payload = new CoreEventModel({
+        id,
         name,
         description,
         status,
