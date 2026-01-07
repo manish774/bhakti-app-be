@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import CoreEventModel from "../models/coreevent.model";
+import CoreEventModel from "../models/coreevents.model";
 import { auth } from "../auth/auth";
 import { coreEventAllowedProps } from "../utils/allowedPropsToUpdate";
 import mongoose from "mongoose";

@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 
+//core
 interface CoreEvent {
   name: string;
   description?: string;
