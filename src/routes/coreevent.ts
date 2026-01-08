@@ -25,6 +25,12 @@ router.post(
         return res.status(400).json("Invalid core event type");
       }
 
+      // Prevent duplicate core event type
+      const existing = await CoreEventModel.findOne({ type });
+      if (existing) {
+        return res.status(400).json("Core event type already exists");
+      }
+
       const payload = new CoreEventModel({
         type,
         title,
@@ -38,6 +44,12 @@ router.post(
       const response = await payload.save();
       res.json(response);
     } catch (e: any) {
+      if (
+        e?.code === 11000 ||
+        (e?.message && e.message.includes("duplicate key"))
+      ) {
+        return res.status(400).json("Duplicate core event");
+      }
       res.status(400).json(e?.message);
     }
   }
@@ -80,6 +92,12 @@ router.patch(
 
       res.json(response);
     } catch (e: any) {
+      if (
+        e?.code === 11000 ||
+        (e?.message && e.message.includes("duplicate key"))
+      ) {
+        return res.status(400).json("Duplicate core event");
+      }
       res.status(400).json(e?.message);
     }
   }
