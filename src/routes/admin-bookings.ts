@@ -99,7 +99,7 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    const [user, temple, packages] = await Promise.all([
+    const [corEvent, event, user, temple, packages] = await Promise.all([
       CoreEventModel.findOne({ type: coreType, eventId: eventId }),
       EventModel.findById(eventId),
       UserModel.findById(userId),
@@ -107,6 +107,14 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       PackageModel.findById(packageId),
     ]);
 
+    if (!corEvent)
+      return res
+        .status(400)
+        .json({ success: false, message: "Core event not found" });
+    if (!event)
+      return res
+        .status(400)
+        .json({ success: false, message: "Event not found" });
     if (!user)
       return res
         .status(400)
