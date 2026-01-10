@@ -35,13 +35,18 @@ router.post(
 
       await validateIdsExist(TempleModel, templeId, "temple");
       await validateIdsExist(PackageModel, packageId, "packages");
-      await validateIdsExist(CoreEventModel, [coreEventId], "core events");
+      // await validateIdsExist(CoreEventModel, [coreEventId], "core events");
       const getPackageIds = pricePackageId.map(
         (x: PackageIddec) => x.packageId
       );
       await validateIdsExist(PackageModel, getPackageIds, "packages");
 
       await checkEmpty([{ propertyname: "Temple name", value: eventName }]);
+
+      const coreEvent = await CoreEventModel.find({ type: coreEventId });
+      if (!coreEvent) {
+        return res.status(400).json("Invalid core event id");
+      }
 
       const request = new EventModel({
         coreEventId,
