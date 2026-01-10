@@ -4,6 +4,8 @@ import PujaModel from "../models/puja-model";
 import TempleModel from "../models/temple-model";
 import UserModel from "../models/users";
 import PackageModel from "../models/package-model";
+import CoreEventModel from "../models/coreevents.model";
+import EventModel from "../models/event-model";
 
 const router = Router();
 
@@ -98,6 +100,8 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
     }
 
     const [user, temple, packages] = await Promise.all([
+      CoreEventModel.findOne({ type: coreType, eventId: eventId }),
+      EventModel.findById(eventId),
       UserModel.findById(userId),
       TempleModel.findById(templeId),
       PackageModel.findById(packageId),
