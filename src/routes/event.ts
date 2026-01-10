@@ -22,6 +22,7 @@ router.post(
       }
 
       const {
+        coreEventId,
         eventName,
         templeId,
         packageId,
@@ -40,7 +41,8 @@ router.post(
 
       await checkEmpty([{ propertyname: "Temple name", value: eventName }]);
 
-      const payload = new EventModel({
+      const request = new EventModel({
+        coreEventId,
         eventExpirationTime,
         eventStartTime,
         eventName,
@@ -49,8 +51,8 @@ router.post(
         pricePackageId,
         isPopular,
       });
-      console.log(payload);
-      const response = await payload.save();
+
+      const response = await request.save();
       res.json(response);
     } catch (e: any) {
       res.status(400).json(e?.message);

@@ -96,6 +96,7 @@ export const packageAllowedProps = {
 export const eventAllowedProps = {
   create: {
     allowed: [
+      "coreEventId",
       "eventName",
       "eventStartTime",
       "eventExpirationTime",
@@ -112,6 +113,7 @@ export const eventAllowedProps = {
 
   update: {
     allowed: [
+      "coreEventId",
       "eventName",
       "eventStartTime",
       "eventExpirationTime",

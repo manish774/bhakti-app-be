@@ -7,6 +7,7 @@ export type PackageIddec = {
 };
 
 export type Ievent = {
+  coreEventId?: string;
   eventName: string;
   templeId: string[];
   packageId: string[];
@@ -27,6 +28,7 @@ const pricePackageSchema = new Schema(
 
 const packageSchema = new Schema(
   {
+    coreEventId: { type: String, required: false },
     eventName: { type: String, required: true },
     templeId: { type: [String], required: true },
     packageId: { type: [String], default: true },
