@@ -32,7 +32,6 @@ router.get("/", async (req: Request, res: Response): Promise<any> => {
     const [bookings, total] = await Promise.all([
       BookingModel.find(filter)
         .populate("userId", "name email")
-        .populate("pujaId", "name coreId startPrice")
         .populate("templeId", "name location")
         .sort({ createdAt: -1 })
         .skip(skip)
@@ -66,7 +65,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
   try {
     const booking = await BookingModel.findById(req.params.id)
       .populate("userId", "name email")
-      .populate("pujaId", "name coreId startPrice description")
       .populate("templeId", "name location packages");
 
     if (!booking) {
@@ -89,7 +87,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
  */
 router.post("/", async (req: Request, res: Response): Promise<any> => {
   try {
-    const { userId, pujaId, templeId, coreType, eventId } = req.body;
+    const { userId, templeId, coreType, eventId } = req.body;
 
     if (!coreType || !eventId) {
       return res.status(400).json({
@@ -98,9 +96,8 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    const [user, puja, temple] = await Promise.all([
+    const [user, puja] = await Promise.all([
       UserModel.findById(userId),
-      PujaModel.findById(pujaId),
       TempleModel.findById(templeId),
     ]);
 
@@ -112,16 +109,11 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       return res
         .status(400)
         .json({ success: false, message: "Puja not found" });
-    if (!temple)
-      return res
-        .status(400)
-        .json({ success: false, message: "Temple not found" });
 
     const booking = await BookingModel.create(req.body);
 
     await booking.populate([
       { path: "userId", select: "name email" },
-      { path: "pujaId", select: "name coreId startPrice" },
       { path: "templeId", select: "name location" },
     ]);
 
@@ -134,13 +126,11 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
     console.error("Error creating booking:", error);
 
     if (error.name === "ValidationError") {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Validation error",
-          errors: error.errors,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: error.errors,
+      });
     }
 
     return res
@@ -163,7 +153,6 @@ router.put("/:id", async (req: Request, res: Response): Promise<any> => {
       }
     ).populate([
       { path: "userId", select: "name email" },
-      { path: "pujaId", select: "name coreId startPrice" },
       { path: "templeId", select: "name location" },
     ]);
 
@@ -181,13 +170,11 @@ router.put("/:id", async (req: Request, res: Response): Promise<any> => {
     console.error("Error updating booking:", error);
 
     if (error.name === "ValidationError") {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Validation error",
-          errors: error.errors,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: error.errors,
+      });
     }
 
     return res
@@ -215,7 +202,6 @@ router.put("/:id/status", async (req: Request, res: Response): Promise<any> => {
       { new: true }
     ).populate([
       { path: "userId", select: "name email" },
-      { path: "pujaId", select: "name coreId startPrice" },
       { path: "templeId", select: "name location" },
     ]);
 
@@ -256,7 +242,6 @@ router.put(
         { new: true }
       ).populate([
         { path: "userId", select: "name email" },
-        { path: "pujaId", select: "name coreId startPrice" },
         { path: "templeId", select: "name location" },
       ]);
 
@@ -296,7 +281,6 @@ router.put("/:id/video", async (req: Request, res: Response): Promise<any> => {
       { new: true }
     ).populate([
       { path: "userId", select: "name email" },
-      { path: "pujaId", select: "name coreId startPrice" },
       { path: "templeId", select: "name location" },
     ]);
 

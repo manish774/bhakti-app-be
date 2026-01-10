@@ -11,7 +11,6 @@ export interface IBooking extends Document {
   coreType: string;
   eventId: string;
   userId: mongoose.Types.ObjectId;
-  pujaId: mongoose.Types.ObjectId;
   templeId: mongoose.Types.ObjectId;
   packageId: string;
   devotees: IBookingDevotee[];
@@ -53,12 +52,12 @@ const bookingSchema = new Schema(
       index: true,
     },
 
-    pujaId: {
-      type: Schema.Types.ObjectId,
-      ref: "pujas",
-      required: true,
-      index: true,
-    },
+    // pujaId: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "pujas",
+    //   required: true,
+    //   index: true,
+    // },
 
     templeId: {
       type: Schema.Types.ObjectId,
