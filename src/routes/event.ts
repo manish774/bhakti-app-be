@@ -43,7 +43,7 @@ router.post(
 
       await checkEmpty([{ propertyname: "Temple name", value: eventName }]);
 
-      const coreEvent = await CoreEventModel.find({ type: coreEventId });
+      const coreEvent = await CoreEventModel.findOne({ type: coreEventId });
       if (!coreEvent) {
         return res.status(400).json("Invalid core event id");
       }
