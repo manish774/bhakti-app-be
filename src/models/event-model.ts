@@ -28,7 +28,7 @@ const pricePackageSchema = new Schema(
 
 const packageSchema = new Schema(
   {
-    coreEventId: { type: String, required: false },
+    coreEventId: { type: String, required: true },
     eventName: { type: String, required: true },
     templeId: { type: [String], required: true },
     packageId: { type: [String], default: true },
