@@ -5,6 +5,7 @@ import { eventAllowedProps } from "../utils/allowedPropsToUpdate";
 import TempleModel from "../models/temple-model";
 import PackageModel from "../models/package-model";
 import { checkEmpty, validateIdsExist } from "./utils";
+import CoreEventModel from "../models/coreevents.model";
 
 const router = Router();
 
@@ -34,6 +35,7 @@ router.post(
 
       await validateIdsExist(TempleModel, templeId, "temple");
       await validateIdsExist(PackageModel, packageId, "packages");
+      await validateIdsExist(CoreEventModel, [coreEventId], "core events");
       const getPackageIds = pricePackageId.map(
         (x: PackageIddec) => x.packageId
       );
