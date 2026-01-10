@@ -96,7 +96,7 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    const [user, puja] = await Promise.all([
+    const [user] = await Promise.all([
       UserModel.findById(userId),
       TempleModel.findById(templeId),
     ]);
@@ -105,10 +105,6 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       return res
         .status(400)
         .json({ success: false, message: "User not found" });
-    if (!puja)
-      return res
-        .status(400)
-        .json({ success: false, message: "Puja not found" });
 
     const booking = await BookingModel.create(req.body);
 
