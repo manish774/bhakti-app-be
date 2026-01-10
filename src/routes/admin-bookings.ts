@@ -100,7 +100,7 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
     }
 
     const [corEvent, event, user, temple, packages] = await Promise.all([
-      CoreEventModel.findOne({ type: coreType, eventId: eventId }),
+      CoreEventModel.findOne({ type: coreType }),
       EventModel.findById(eventId),
       UserModel.findById(userId),
       TempleModel.findById(templeId),
