@@ -3,6 +3,7 @@ import BookingModel from "../models/booking-model";
 import PujaModel from "../models/puja-model";
 import TempleModel from "../models/temple-model";
 import UserModel from "../models/users";
+import PackageModel from "../models/package-model";
 
 const router = Router();
 
@@ -87,7 +88,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
  */
 router.post("/", async (req: Request, res: Response): Promise<any> => {
   try {
-    const { userId, templeId, coreType, eventId } = req.body;
+    const { userId, templeId, coreType, eventId, packageId } = req.body;
 
     if (!coreType || !eventId) {
       return res.status(400).json({
@@ -96,15 +97,24 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    const [user] = await Promise.all([
+    const [user, temple, packages] = await Promise.all([
       UserModel.findById(userId),
       TempleModel.findById(templeId),
+      PackageModel.findById(packageId),
     ]);
 
     if (!user)
       return res
         .status(400)
         .json({ success: false, message: "User not found" });
+    if (!temple)
+      return res
+        .status(400)
+        .json({ success: false, message: "Temple not found" });
+    if (!packages)
+      return res
+        .status(400)
+        .json({ success: false, message: "Package not found" });
 
     const booking = await BookingModel.create(req.body);
 
