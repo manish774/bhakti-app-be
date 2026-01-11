@@ -133,6 +133,7 @@ router.delete(
 
 /**
  * GET ALL EVENTS
+ * Query params: page, limit, templeId, coreEventId, packageId, isPopular
  */
 router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   try {
@@ -142,10 +143,32 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
 
     const skip = (page - 1) * limit;
 
-    // Fetch data with pagination
+    // Extract filter parameters
+    const { templeId, coreEventId, packageId, isPopular } = req.query;
+
+    // Build filter object
+    const filter: any = {};
+
+    if (templeId) {
+      filter.templeId = { $in: [templeId] };
+    }
+
+    if (coreEventId) {
+      filter.coreEventId = coreEventId;
+    }
+
+    if (packageId) {
+      filter.packageId = { $in: [packageId] };
+    }
+
+    if (isPopular !== undefined) {
+      filter.isPopular = isPopular === "true";
+    }
+
+    // Fetch data with pagination and filters
     const [events, total] = await Promise.all([
-      EventModel.find().skip(skip).limit(limit).sort({ createdAt: -1 }),
-      EventModel.countDocuments(),
+      EventModel.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+      EventModel.countDocuments(filter),
     ]);
 
     res.json({
