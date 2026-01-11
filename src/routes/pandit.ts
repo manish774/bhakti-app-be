@@ -6,59 +6,7 @@ import { panditAllowedProps } from "../utils/allowedPropsToUpdate";
 const router = Router();
 
 /**
- * @swagger
- * /api/pandit/create:
- *   post:
- *     summary: Create a new pandit
- *     tags: [Pandits]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - about
- *               - address
- *               - phone
- *               - specialization
- *               - templeAssociatedId
- *             properties:
- *               name:
- *                 type: string
- *                 example: Pandit Sharma
- *               about:
- *                 type: string
- *               address:
- *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *               phone:
- *                 type: string
- *               extraInfo:
- *                 type: string
- *               specialization:
- *                 type: array
- *                 items:
- *                   type: string
- *               templeAssociatedId:
- *                 type: array
- *                 items:
- *                   type: string
- *     responses:
- *       200:
- *         description: Pandit created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Pandit'
- *       400:
- *         description: Validation error
+ * CREATE PANDIT
  */
 router.post(
   "/create",
@@ -101,56 +49,7 @@ router.post(
 );
 
 /**
- * @swagger
- * /api/pandit/update:
- *   patch:
- *     summary: Update a pandit
- *     tags: [Pandits]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: string
- *                 format: ObjectId
- *                 description: Pandit ID
- *               name:
- *                 type: string
- *               about:
- *                 type: string
- *               address:
- *                 type: string
- *               email:
- *                 type: string
- *               phone:
- *                 type: string
- *               extraInfo:
- *                 type: string
- *               specialization:
- *                 type: array
- *                 items:
- *                   type: string
- *               templeAssociatedId:
- *                 type: array
- *                 items:
- *                   type: string
- *     responses:
- *       200:
- *         description: Pandit updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Pandit'
- *       400:
- *         description: Missing or invalid pandit id
+ * UPDATE PANDIT
  */
 router.patch(
   "/update",
@@ -187,36 +86,7 @@ router.patch(
 );
 
 /**
- * @swagger
- * /api/pandit/delete:
- *   delete:
- *     summary: Delete a pandit
- *     tags: [Pandits]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: string
- *                 format: ObjectId
- *                 description: Pandit ID to delete
- *     responses:
- *       200:
- *         description: Pandit deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Pandit'
- *       400:
- *         description: Missing or invalid pandit id
+ * DELETE PANDIT
  */
 router.delete(
   "/delete",
@@ -243,23 +113,7 @@ router.delete(
 );
 
 /**
- * @swagger
- * /api/pandit/get:
- *   get:
- *     summary: Get all pandits
- *     tags: [Pandits]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     responses:
- *       200:
- *         description: List of all pandits
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Pandit'
+ * GET ALL PANDITS
  */
 router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   try {
@@ -271,33 +125,8 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
 });
 
 /**
- * @swagger
- * /api/pandit/getbytemple:
- *   get:
- *     summary: Get pandits by temple ID
- *     tags: [Pandits]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     parameters:
- *       - in: query
- *         name: templeId
- *         required: true
- *         schema:
- *           type: string
- *           format: ObjectId
- *         description: Temple ID
- *     responses:
- *       200:
- *         description: List of pandits for the temple
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Pandit'
- *       400:
- *         description: Missing temple id
+ * GET PANDITS BY TEMPLE
+ * /getbytemple?templeId=xxx
  */
 router.get(
   "/getbytemple",

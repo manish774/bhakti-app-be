@@ -7,60 +7,7 @@ import mongoose from "mongoose";
 const router = Router();
 
 /**
- * @swagger
- * /api/package/create:
- *   post:
- *     summary: Create a new package
- *     tags: [Packages]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - numberOfPerson
- *               - price
- *             properties:
- *               name:
- *                 type: string
- *                 example: Basic Package
- *               numberOfPerson:
- *                 type: integer
- *                 minimum: 1
- *                 example: 5
- *               title:
- *                 type: string
- *                 example: Family Puja Package
- *               price:
- *                 type: number
- *                 minimum: 0
- *                 example: 5000
- *               description:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                     detail:
- *                       type: string
- *               isPopular:
- *                 type: boolean
- *                 default: false
- *     responses:
- *       200:
- *         description: Package created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Package'
- *       400:
- *         description: Validation error
+ * CREATE PACKAGE
  */
 router.post(
   "/create",
@@ -93,50 +40,7 @@ router.post(
 );
 
 /**
- * @swagger
- * /api/package/update:
- *   patch:
- *     summary: Update a package
- *     tags: [Packages]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: string
- *                 format: ObjectId
- *                 description: Package ID
- *               name:
- *                 type: string
- *               numberOfPerson:
- *                 type: integer
- *               title:
- *                 type: string
- *               price:
- *                 type: number
- *               description:
- *                 type: array
- *                 items:
- *                   type: object
- *               isPopular:
- *                 type: boolean
- *     responses:
- *       200:
- *         description: Package updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Package'
- *       400:
- *         description: Missing or invalid package id
+ * UPDATE PACKAGE
  */
 router.patch(
   "/update",
@@ -173,36 +77,7 @@ router.patch(
 );
 
 /**
- * @swagger
- * /api/package/delete:
- *   delete:
- *     summary: Delete a package
- *     tags: [Packages]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - id
- *             properties:
- *               id:
- *                 type: string
- *                 format: ObjectId
- *                 description: Package ID to delete
- *     responses:
- *       200:
- *         description: Package deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Package'
- *       400:
- *         description: Missing or invalid package id
+ * DELETE PACKAGE
  */
 router.delete(
   "/delete",
@@ -232,41 +107,8 @@ router.delete(
  * GET ALL PACKAGES
  */
 /**
- * @swagger
- * /api/package/get:
- *   get:
- *     summary: Get all packages with pagination
- *     tags: [Packages]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Page number
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Items per page
- *     responses:
- *       200:
- *         description: List of packages
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Package'
- *                 pagination:
- *                   $ref: '#/components/schemas/Pagination'
+ * GET ALL PACKAGES (with pagination)
+ * GET /get?page=1&limit=10
  */
 router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   try {
@@ -296,42 +138,8 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   }
 });
 /**
- * @swagger
- * /api/package/getByIds:
- *   post:
- *     summary: Get packages by IDs
- *     tags: [Packages]
- *     security:
- *       - bearerAuth: []
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - ids
- *             properties:
- *               ids:
- *                 type: array
- *                 items:
- *                   type: string
- *                   format: ObjectId
- *                 description: Array of package IDs
- *     responses:
- *       200:
- *         description: List of packages
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Package'
- *       400:
- *         description: ids must be a non-empty array
- *       500:
- *         description: Internal server error
+ * GET PACKAGE BY ID
+ * GET /get/:id
  */
 router.post(
   "/getByIds",
@@ -357,5 +165,7 @@ router.post(
     }
   }
 );
+
+router.post("get");
 
 export default router;

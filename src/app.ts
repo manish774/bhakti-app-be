@@ -20,8 +20,6 @@ import CoreEventRouter from "./routes/coreevent";
 
 import cors from "cors";
 import path from "path";
-import swaggerUi from "swagger-ui-express";
-import { swaggerSpec } from "./config/swagger";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -42,36 +40,7 @@ app.use(express.json());
 app.use(responseInterceptor);
 app.use(cookieParser());
 
-// Swagger UI
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-/**
- * @swagger
- * /health:
- *   get:
- *     summary: Health check endpoint
- *     tags: [Health]
- *     responses:
- *       200:
- *         description: Server health status
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: OK
- *                 timestamp:
- *                   type: string
- *                   format: date-time
- *                 uptime:
- *                   type: number
- *                   description: Server uptime in seconds
- *                 environment:
- *                   type: string
- *                   example: development
- */
+// Health check endpoint
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "OK",
