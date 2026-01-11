@@ -59,6 +59,47 @@ const handleMulterError = (
   next();
 };
 
+/**
+ * @swagger
+ * /api/upload/single:
+ *   post:
+ *     summary: Upload a single image
+ *     tags: [Upload]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - image
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Image file (max 5MB)
+ *     responses:
+ *       200:
+ *         description: File uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: File uploaded
+ *                 file:
+ *                   type: object
+ *                   properties:
+ *                     filename:
+ *                       type: string
+ *                     url:
+ *                       type: string
+ *                       format: uri
+ *       400:
+ *         description: No file uploaded or file size exceeds limit
+ */
 // Single image
 router.post(
   "/single",
@@ -82,6 +123,51 @@ router.post(
   }
 );
 
+/**
+ * @swagger
+ * /api/upload/multiple:
+ *   post:
+ *     summary: Upload multiple images
+ *     tags: [Upload]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - images
+ *             properties:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: Array of image files (max 10 files, 5MB each)
+ *     responses:
+ *       200:
+ *         description: Files uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Files uploaded
+ *                 files:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       filename:
+ *                         type: string
+ *                       url:
+ *                         type: string
+ *                         format: uri
+ *       400:
+ *         description: No files uploaded or file size exceeds limit
+ */
 // Multiple images
 router.post(
   "/multiple",
