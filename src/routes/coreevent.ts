@@ -6,7 +6,52 @@ import { coreEventAllowedProps } from "../utils/allowedPropsToUpdate";
 const router = Router();
 
 /**
- * CREATE CORE EVENT
+ * @swagger
+ * /api/coreevent/create:
+ *   post:
+ *     summary: Create a new core event
+ *     tags: [Core Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - type
+ *               - title
+ *               - icon
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 enum: [coreevent_online_puja, coreevent_offline_puja]
+ *                 example: coreevent_online_puja
+ *               title:
+ *                 type: string
+ *                 example: Online Puja
+ *               description:
+ *                 type: string
+ *               icon:
+ *                 type: string
+ *               color:
+ *                 type: string
+ *               shadowColor:
+ *                 type: string
+ *               visible:
+ *                 type: boolean
+ *                 default: true
+ *     responses:
+ *       200:
+ *         description: Core event created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CoreEvent'
+ *       400:
+ *         description: Validation error or duplicate core event type
  */
 router.post(
   "/create",
@@ -56,7 +101,48 @@ router.post(
 );
 
 /**
- * UPDATE CORE EVENT
+ * @swagger
+ * /api/coreevent/update:
+ *   patch:
+ *     summary: Update a core event
+ *     tags: [Core Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - type
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 enum: [coreevent_online_puja, coreevent_offline_puja]
+ *                 description: Core event type (used to identify the event)
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               icon:
+ *                 type: string
+ *               color:
+ *                 type: string
+ *               shadowColor:
+ *                 type: string
+ *               visible:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Core event updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CoreEvent'
+ *       400:
+ *         description: Missing or invalid core event type
  */
 router.patch(
   "/update",
@@ -131,8 +217,41 @@ router.patch(
 // );
 
 /**
- * GET ALL CORE EVENTS (with pagination)
- * GET /get?page=1&limit=10
+ * @swagger
+ * /api/coreevent/get:
+ *   get:
+ *     summary: Get all core events with pagination
+ *     tags: [Core Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: List of core events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/CoreEvent'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  */
 router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   try {
@@ -161,7 +280,42 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
 });
 
 /**
- * GET CORE EVENTS BY IDS
+ * @swagger
+ * /api/coreevent/getByTypes:
+ *   post:
+ *     summary: Get core events by types
+ *     tags: [Core Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - types
+ *             properties:
+ *               types:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   enum: [coreevent_online_puja, coreevent_offline_puja]
+ *                 description: Array of core event types
+ *     responses:
+ *       200:
+ *         description: List of core events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CoreEvent'
+ *       400:
+ *         description: types must be a non-empty array
+ *       500:
+ *         description: Internal server error
  */
 router.post(
   "/getByTypes",

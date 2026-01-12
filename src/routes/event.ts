@@ -10,7 +10,74 @@ import CoreEventModel from "../models/coreevents.model";
 const router = Router();
 
 /**
- * CREATE EVENT
+ * @swagger
+ * /api/event/create:
+ *   post:
+ *     summary: Create a new event
+ *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - coreEventId
+ *               - eventName
+ *               - templeId
+ *               - packageId
+ *               - pricePackageId
+ *               - eventStartTime
+ *               - eventExpirationTime
+ *             properties:
+ *               coreEventId:
+ *                 type: string
+ *                 example: coreevent_online_puja
+ *               eventName:
+ *                 type: string
+ *                 example: Ganesh Chaturthi Puja
+ *               templeId:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: ObjectId
+ *               packageId:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: ObjectId
+ *               pricePackageId:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     packageId:
+ *                       type: string
+ *                     price:
+ *                       type: number
+ *                     discount:
+ *                       type: number
+ *               eventStartTime:
+ *                 type: string
+ *                 format: date-time
+ *               eventExpirationTime:
+ *                 type: string
+ *                 format: date-time
+ *               isPopular:
+ *                 type: boolean
+ *                 default: false
+ *     responses:
+ *       200:
+ *         description: Event created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Validation error
  */
 router.post(
   "/create",
@@ -68,7 +135,60 @@ router.post(
 );
 
 /**
- * UPDATE EVENT
+ * @swagger
+ * /api/event/update:
+ *   patch:
+ *     summary: Update an event
+ *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 format: ObjectId
+ *                 description: Event ID
+ *               coreEventId:
+ *                 type: string
+ *               eventName:
+ *                 type: string
+ *               templeId:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               packageId:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               pricePackageId:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               eventStartTime:
+ *                 type: string
+ *                 format: date-time
+ *               eventExpirationTime:
+ *                 type: string
+ *                 format: date-time
+ *               isPopular:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Event updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Invalid event id or validation error
  */
 router.patch(
   "/update",
@@ -105,7 +225,36 @@ router.patch(
 );
 
 /**
- * DELETE EVENT
+ * @swagger
+ * /api/event/delete:
+ *   delete:
+ *     summary: Delete an event
+ *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 format: ObjectId
+ *                 description: Event ID to delete
+ *     responses:
+ *       200:
+ *         description: Event deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Missing or invalid event id
  */
 router.delete(
   "/delete",
@@ -132,8 +281,61 @@ router.delete(
 );
 
 /**
- * GET ALL EVENTS
- * Query params: page, limit, templeId, coreEventId, packageId, isPopular
+ * @swagger
+ * /api/event/get:
+ *   get:
+ *     summary: Get all events with pagination and filters
+ *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10000
+ *         description: Items per page
+ *       - in: query
+ *         name: templeId
+ *         schema:
+ *           type: string
+ *         description: Filter by temple ID
+ *       - in: query
+ *         name: coreEventId
+ *         schema:
+ *           type: string
+ *         description: Filter by core event ID
+ *       - in: query
+ *         name: packageId
+ *         schema:
+ *           type: string
+ *         description: Filter by package ID
+ *       - in: query
+ *         name: isPopular
+ *         schema:
+ *           type: boolean
+ *         description: Filter by popular status
+ *     responses:
+ *       200:
+ *         description: List of events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Event'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  */
 router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
   try {
@@ -186,8 +388,33 @@ router.get("/get", auth, async (req: Request, res: Response): Promise<any> => {
 });
 
 /**
- * GET EVENTS BY TEMPLE
- * /getbytemple?templeId=xxx
+ * @swagger
+ * /api/event/getbytemple:
+ *   get:
+ *     summary: Get events by temple ID
+ *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: templeId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: ObjectId
+ *         description: Temple ID
+ *     responses:
+ *       200:
+ *         description: List of events for the temple
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Missing temple id
  */
 router.get(
   "/getbytemple",
